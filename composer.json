@@ -21,7 +21,7 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "frobou/frobou-utils" : "dev-master"
+        "frobou/frobou-utils": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.3"
