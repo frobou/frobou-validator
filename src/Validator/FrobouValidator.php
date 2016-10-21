@@ -4,39 +4,67 @@ namespace Frobou\Validator;
 
 abstract class FrobouValidator
 {
-
-    use FrobouMessages; //trait
-
     /**
-     * validateMinimumValue(jsonObject, ['username' => 5, 'firstname' => 8])
-     *
-     * @param \stdClass $source
-     * @param array $val_list
-     * @return boolean
+     * $min_struct = $this->validateMinimumValue($data, ['start' => 1, 'qtty' => 1]);
+     * @param stdClass $data
+     * @param array $value_list
+     * @return bool|string
      */
-    public function validateMinimumValue($source, $val_list)
+    public function validateMinimumValue(\stdClass $data, array $value_list)
     {
-        if (!is_object($source) || !is_array($val_list)){
-            $this->minimum_value = 'Incorrect param type';
-            return false;
+        if (!$data instanceof \stdClass || !is_array($value_list)){
+            return 'Incorrect input param type';
         }
         $error_list = [];
-        foreach ($source as $key => $value) {
-            if (key_exists($key, $val_list) && (intval($value) < intval($val_list[$key]))) {
+        foreach ($data as $key => $value) {
+            if (key_exists($key, $value_list) && (intval($value) < intval($value_list[$key]))) {
                 array_push($error_list, [
-                    $key => "exp: {$val_list[$key]} - rec: {$value}"
+                    $key => "exp: {$value_list[$key]} - rec: {$value}"
                 ]);
             }
         }
         if (count($error_list) > 0) {
-            $this->minimumValue($error_list);
-            return false;
+            $out = 'Minimum value error on field(s) ';
+            foreach ($error_list as $v) {
+                foreach ($v as $key => $value) {
+                    $out .= "{$key} => {$value} | ";
+                }
+            }
+            return substr($out, 0, strlen($out) - 3);
         }
-        $this->minimum_value = 'OK';
         return true;
     }
 
-    public function getMinimumValueMessage(){
-        return $this->minimum_value;
+
+    /**
+     * $max_struct = $this->jsonValidateMax($data, ['start' => 1, 'qtde' => 1]);
+     * @param stdClass $data
+     * @param array $value_list
+     * @return bool|string
+     */
+    public function validateMaximunValue(\stdClass $data, array $value_list)
+    {
+        if (!$data instanceof \stdClass || !is_array($value_list)){
+            return 'Incorrect input param type';
+        }
+        $error_list = [];
+        foreach ($data as $key => $value) {
+            if (key_exists($key, $value_list) && (intval($value) > intval($value_list[$key]))) {
+                array_push($error_list, [
+                    $key => "exp: {$value_list[$key]} - rec: {$value}"
+                ]);
+            }
+        }
+        if (count($error_list) > 0) {
+            $out = 'Maximun value error on field(s) ';
+            foreach ($error_list as $v) {
+                foreach ($v as $key => $value) {
+                    $out .= "{$key} => {$value} | ";
+                }
+            }
+            return substr($out, 0, strlen($out) - 3);
+        }
+        return true;
     }
+
 }
