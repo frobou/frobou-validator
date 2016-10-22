@@ -109,7 +109,7 @@ abstract class FrobouValidatorAbstract
     {
         $this->validateHeader($data, 'validateMaximunValue');
         $error_list = [];
-        foreach ($data as $key => $value) {
+        foreach ($data[0] as $key => $value) {
             if (key_exists($key, $data[1]) && (intval($value) > intval($data[1][$key]))) {
                 array_push($error_list, [$key => "exp: {$data[1][$key]} - rec: {$value}"]);
             }
