@@ -291,21 +291,21 @@ abstract class FrobouValidatorAbstract
             if (in_array($key, $data[1]) && strtotime($value) === false) {
                 array_push($a, [$key => $value]);
             }
-        }
-        if (count($a) > 0) {
-            $out = 'Incorrect Date: ';
-            if ($debug === true) {
-                $out .= 'Field(s) [';
-                foreach ($a as $v) {
-                    $out .= key($v) . ', ';
+            if (count($a) > 0) {
+                $out = 'Incorrect Date: ';
+                if ($debug === true) {
+                    $out .= 'Field(s) [';
+                    foreach ($a as $v) {
+                        $out .= key($v) . ', ';
+                    }
+                    $this->error_list['date_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
+                } else {
+                    $this->error_list['date_en'] = substr($out, 0, strlen($out) - 1);
                 }
-                $this->error_list['date_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
-            } else {
-                $this->error_list['date_en'] = substr($out, 0, strlen($out) - 1);
+                return false;
             }
-            return false;
+            return true;
         }
-        return true;
     }
 
     private function validateHeader($data, $name)
