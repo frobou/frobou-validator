@@ -1,6 +1,6 @@
 ## frobou-validator ##
-validate some data, like min value, max value, etc.
-data must be on stdClass object.
+validate some data, like min value, max value, etc.  
+data must be a stdClass object.
 
 **usage:**
 
