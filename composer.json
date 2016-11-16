@@ -2,7 +2,6 @@
     "name": "frobou/frobou-validator",
     "description": "Frobou Validator",
     "type": "library",
-    "version": "0.0.1",
     "homepage": "http://frobou.com.br",
     "license": "MIT",
     "authors": [
