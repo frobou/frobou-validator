@@ -6,6 +6,13 @@ abstract class FrobouValidatorAbstract
 {
     protected $error_list = [];
 
+    private function validateHeader($data, $name)
+    {
+        if (!$data[0] instanceof \stdClass || !is_array($data[1])) {
+            throw new \Exception("Incorrect input param type for {$name}");
+        }
+    }
+
     public function struct($data, $debug = false)
     {
         $this->validateHeader($data, 'validateStructure');
@@ -308,11 +315,37 @@ abstract class FrobouValidatorAbstract
         }
     }
 
-    private function validateHeader($data, $name)
+    /* validator de after */
+    public function validateError($data)
     {
-        if (!$data[0] instanceof \stdClass || !is_array($data[1])) {
-            throw new \Exception("Incorrect input param type for {$name}");
+        if (isset($data)) {
+            $this->error_list['error'] = ['Type' => 'ValidateError', 'ErrorCode' => $data[1], 'Message' => $data[2]];
         }
+        return true;
+    }
+
+    public function validateNotfound($data)
+    {
+        if (isset($data) && count($data) == 0) {
+            $this->error_list['error'] = ['Type' => 'ValidateError', 'ErrorCode' => 1101, 'Message' => 'No data found'];
+        }
+        return true;
+    }
+
+    public function validateExists($data)
+    {
+        if (isset($data) && (is_array($data) && count($data) > 0)) {
+            $this->error_list['error'] = ['Type' => 'ValidateError', 'ErrorCode' => 1102, 'Message' => 'A set with these values already exists'];
+        }
+        return true;
+    }
+
+    public function validateIsnull($data)
+    {
+        if (isset($data) && !is_null($data) && (is_array($data) && (count($data) > 0))) {
+            $this->error_list['error'] = ['Type' => 'ValidateError', 'ErrorCode' => 1103, 'Message' => 'Data found'];
+        }
+        return true;
     }
 
 }
