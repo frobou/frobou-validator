@@ -1,5 +1,5 @@
 ## frobou-validator ##
-validate some data, like min value, max value, etc.  
+validate some data, email, like min value, max value, etc.  
 data must be a stdClass object.
 
 **usage:**
