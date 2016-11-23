@@ -6,6 +6,10 @@ abstract class FrobouValidatorAbstract
 {
     protected $error_list = [];
 
+    public function __construct()
+    {
+    }
+
     private function validateHeader($data, $name)
     {
         if (!$data[0] instanceof \stdClass || !is_array($data[1])) {
