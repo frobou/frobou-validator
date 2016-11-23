@@ -17,6 +17,9 @@ class FrobouValidator extends FrobouValidatorAbstract
             $this->{$value}($data[$value], $debug);
         }
         if (count($this->error_list) > 0) {
+            if (isset($this->logger)){
+                $this->logger->warning('ACCESS', ['Cause' => $this->error_list]);
+            }
             return $this->error_list;
         }
         return true;
@@ -35,6 +38,9 @@ class FrobouValidator extends FrobouValidatorAbstract
             $this->{$method}($value);
         }
         if (count($this->error_list) > 0) {
+            if (isset($this->logger)){
+                $this->logger->warning('ACCESS', ['Cause' => $this->error_list]);
+            }
             return $this->error_list;
         }
         return true;

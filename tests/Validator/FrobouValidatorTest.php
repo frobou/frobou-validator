@@ -2,6 +2,9 @@
 
 namespace Frobou\Validator;
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+
 class FrobouValidatorTest extends \PHPUnit_Framework_TestCase
 {
     private $data;
@@ -12,7 +15,9 @@ class FrobouValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->data = [];
         $this->object = new \stdClass();
-        $this->validator = new FrobouValidator();
+        $log = new Logger('log-test');
+        $log->pushHandler(new StreamHandler(__DIR__.'/logs/log-test.log', Logger::INFO));
+        $this->validator = new FrobouValidator($log);
     }
 
     public function tearDown()

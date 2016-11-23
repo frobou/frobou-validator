@@ -20,7 +20,8 @@
     },
     "require": {
         "php": ">=5.4.0",
-        "commerceguys/enum": "*"
+        "commerceguys/enum": "*",
+        "monolog/monolog": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.3"

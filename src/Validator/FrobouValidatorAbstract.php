@@ -2,18 +2,29 @@
 
 namespace Frobou\Validator;
 
+use Monolog\Logger;
+
 abstract class FrobouValidatorAbstract
 {
     protected $error_list = [];
+    /**
+     * @var Logger
+     */
+    protected $logger;
 
-    public function __construct()
+    public function __construct(Logger $logger = null)
     {
+        $this->logger = $logger;
     }
 
     private function validateHeader($data, $name)
     {
         if (!$data[0] instanceof \stdClass || !is_array($data[1])) {
-            throw new \Exception("Incorrect input param type for {$name}");
+            $mes = "Incorrect input param type for {$name}";
+            if (isset($this->logger)){
+                $this->logger->warning('ACCESS', ['Cause' => $mes]);
+            }
+            throw new \Exception($mes);
         }
     }
 

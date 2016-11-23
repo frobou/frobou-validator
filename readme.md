@@ -1,12 +1,15 @@
 ## frobou-validator ##
-validate some data, email, like min value, max value, etc.  
-data must be a stdClass object.
+validate some data, like min value, max value, email, etc.  
+data must be a stdClass object.  
+Now with logs...
 
 **usage:**
 
     $this->data = [];
     $this->object = new \stdClass();
-    $this->validator = new FrobouValidator();
+    $log = new Logger('log-test');
+    $log->pushHandler(new StreamHandler(__DIR__.'/logs/log-test.log', Logger::INFO));
+    $this->validator = new FrobouValidator(); // or $this->validator = new FrobouValidator($log);
     public function testValidateDateEnOk()
     {
         $this->data['date_en'] = [];
