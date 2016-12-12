@@ -177,6 +177,19 @@ class FrobouValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('ip', $this->validator->validate(['ip'], $this->data, true));
     }
 
+    public function testValidateDomain()
+    {
+        $this->data['domain'] = [];
+        $this->object->domain = 'teste.com';
+        array_push($this->data['domain'], clone $this->object, ['domain']);
+        $this->assertTrue($this->validator->validate(['domain'], $this->data, true));
+
+        $this->data['domain'] = [];
+        $this->object->domain = 'teste.nao.quero';
+        array_push($this->data['domain'], clone $this->object, ['domain']);
+        $this->assertArrayHasKey('domain', $this->validator->validate(['domain'], $this->data, true));
+    }
+
     public function testValidateDateEn()
     {
         $this->data['date_en'] = [];

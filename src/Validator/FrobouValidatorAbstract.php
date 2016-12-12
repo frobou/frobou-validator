@@ -305,6 +305,33 @@ abstract class FrobouValidatorAbstract
         return true;
     }
 
+    public function domain(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateDomain');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1])) {
+                if (FrobouValidation::validateDomain($value) !== true) {
+                    array_push($a, [$key => $value]);
+                }
+            }
+        }
+        if (count($a) > 0) {
+            $out = 'Incorrect Domain: ';
+            if ($debug === true) {
+                $out .= 'Field(s) [';
+                foreach ($a as $v) {
+                    $out .= key($v) . ', ';
+                }
+                $this->error_list['domain'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid Domain';
+            } else {
+                $this->error_list['domain'] = substr($out, 0, strlen($out) - 1);
+            }
+            return false;
+        }
+        return true;
+    }
+
     public function date_en(array $data, $debug = false)
     {
         $this->validateHeader($data, 'validateDateEn');
