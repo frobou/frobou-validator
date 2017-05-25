@@ -205,4 +205,29 @@ class FrobouValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('date_en', $this->validator->validate(['date_en'], $this->data, true));
     }
 
+    public function testValidateVoidOk()
+    {
+        $obj = new \stdClass();
+        $this->data['void'] = [];
+        $this->object->object = $obj;
+        $this->object->start = '';
+        $this->object->qtty = [];
+        $this->object->pastel = '';
+        array_push($this->data['void'], clone $this->object, ['object','start', 'qtty', 'pastel']);
+        $this->assertTrue($this->validator->validate(['void'], $this->data, true));
+    }
+
+    public function testValidateVoidFail()
+    {
+        $obj = new \stdClass();
+        $obj->nada = [];
+        $this->data['void'] = [];
+        $this->object->object = $obj;
+        $this->object->start = '1';
+        $this->object->qtty = ['a'];
+        $this->object->pastel = 'de carne';
+        array_push($this->data['void'], clone $this->object, ['object','start', 'qtty', 'pastel']);
+        $this->assertArrayHasKey('void', $this->validator->validate(['void'], $this->data, true));
+    }
+
 }
