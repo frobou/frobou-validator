@@ -19,7 +19,7 @@ abstract class FrobouValidatorAbstract
 
     private function validateHeader($data, $name)
     {
-        if (!$data[0] instanceof \stdClass || !is_array($data[1])) {
+        if (isset($data[0]) && (!$data[0] instanceof \stdClass || !is_array($data[1]))) {
             $mes = "Incorrect input param type for {$name}";
             if (isset($this->logger)){
                 $this->logger->warning('ACCESS', ['Cause' => $mes]);
@@ -159,25 +159,29 @@ abstract class FrobouValidatorAbstract
 
     public function values(array $data, $debug = false)
     {
-        $this->validateHeader($data, 'validateValues');
-        if (count($data[1]) !== 1) {
-            $this->error_list['values'] = 'Only one value per time';
-            return false;
-        }
-        if (!in_array($data[0]->{$data[1][0]}, $data[2])) {
-            $out = 'Expected value error: ';
-            if ($debug === true) {
-                $a = '';
-                foreach ($data[2] as $value) {
-                    $a .= "{$value}, ";
-                }
-                $this->error_list['values'] = $out . $data[1][0] . ' value must be [' . substr($a, 0, strlen($a) - 2) . ']';
-            } else {
-                $this->error_list['values'] = substr($out, 0, strlen($out) - 1);
+        if (count($data) > 0) {
+            $this->validateHeader($data, 'validateValues');
+            if (count($data[1]) !== 1) {
+                $this->error_list['values'] = 'Only one value per time';
+                return false;
             }
-            return false;
+            if (!in_array($data[0]->{$data[1][0]}, $data[2])) {
+                $out = 'Expected value error: ';
+                if ($debug === true) {
+                    $a = '';
+                    foreach ($data[2] as $value) {
+                        $a .= "{$value}, ";
+                    }
+                    $this->error_list['values'] = $out . $data[1][0] . ' value must be [' . substr($a, 0,
+                            strlen($a) - 2) . ']';
+                } else {
+                    $this->error_list['values'] = substr($out, 0, strlen($out) - 1);
+                }
+                return false;
+            }
+            return true;
         }
-        return true;
+        return null;
     }
 
     protected function min(array $data, $debug = false)
