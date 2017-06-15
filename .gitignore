@@ -1,8 +1,7 @@
-nbproject
-.project
-.settings
-.idea
-.buildpath
+.project/
+.settings/
+.idea/
+.buildpath/
 vendor/
 bin/
 composer.lock

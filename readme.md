@@ -1,4 +1,6 @@
 ## frobou-validator ##
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/238ed371-261e-4572-ba85-2ca1f6e172b8/small.png)](https://insight.sensiolabs.com/projects/238ed371-261e-4572-ba85-2ca1f6e172b8)  
+
 validate some data, like min value, max value, email, etc.  
 data must be a stdClass object.  
 Now with logs...

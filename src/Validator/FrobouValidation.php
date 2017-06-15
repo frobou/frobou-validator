@@ -82,7 +82,7 @@ abstract class FrobouValidation
         $ret = preg_match('/^([A-Z0-9][A-Z0-9_-]*(?:.[A-Z0-9][A-Z0-9_-]*)+):?(d+)?/i', $domain_name) //valid chars check
             && preg_match("/^.{1,253}$/", $domain_name) //overall length check
             && preg_match("/^[^\.]{1,63}(\.[^\.]{1,63})*$/", $domain_name);
-        if ($ret == true) {
+        if ($ret === true) {
             $dom = explode('.', $domain_name);
             if (count($dom) > 3 || (count($dom) > 2 && strlen($dom[count($dom) - 1]) != 2) || count($dom) == 1) {
                 return false;
@@ -138,7 +138,7 @@ abstract class FrobouValidation
                     throw new \InvalidArgumentException();
                 }
             }
-            $ct ++;
+            $ct++;
         }
         return true;
     }
