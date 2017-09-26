@@ -11,6 +11,20 @@ namespace Frobou\Validator;
 
 abstract class FrobouValidation
 {
+
+    /**
+     *
+     * @param type $data
+     * @return boolean
+     */
+    public static function validateString($data)
+    {
+        if (is_string($data) === false) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Remove tudo que não for numérico de uma string.
      * $confirm_only retorna boolean informando se a string de saída seria alterada
