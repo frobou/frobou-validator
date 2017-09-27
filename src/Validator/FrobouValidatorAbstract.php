@@ -184,29 +184,46 @@ abstract class FrobouValidatorAbstract
 
     public function values(array $data, $debug = false)
     {
+        $ok = null;
         if (count($data) > 0) {
             $this->validateHeader($data, 'validateValues');
-            if (count($data[1]) !== 1) {
-                $this->error_list['values'] = 'Only one value per time';
+            if (count($data[1]) !== count($data[2])) {
+                $this->error_list['values'] = "Input count error";
                 return false;
             }
-            if (!in_array($data[0]->{$data[1][0]}, $data[2])) {
-                $out = 'Expected value error: ';
-                if ($debug === true) {
-                    $a = '';
-                    foreach ($data[2] as $value) {
-                        $a .= "{$value}, ";
+            $a = ($data[0]);
+            for ($i = 0; $i <= count($data[1]) - 1; $i++) {
+                $field = $data[1][$i];
+                $array = $data[2][$i];
+                if (!in_array(strtoupper($data[0]->{$field}), $array)) {
+                    $out = 'Expected value error: ';
+                    if ($debug === true) {
+                        $a = '';
+                        foreach ($array as $value) {
+                            $a .= "{$value}, ";
+                        }
+                        if (!isset($this->error_list['values'])) {
+                            $this->error_list['values'] = [$out . $field . ' value must be [' . substr($a, 0,
+                                    strlen($a) - 2) . ']'];
+                        } else {
+                            array_push($this->error_list['values'], $out . $field . ' value must be [' . substr($a, 0,
+                                    strlen($a) - 2) . ']');
+                        }
+                    } else {
+                        if (!isset($this->error_list['values'])) {
+                            $this->error_list['values'] = [substr($out, 0, strlen($out) - 1)];
+                        } else {
+                            array_push($this->error_list['values'], substr($out, 0, strlen($out) - 1));
+                        }
                     }
-                    $this->error_list['values'] = $out . $data[1][0] . ' value must be [' . substr($a, 0,
-                            strlen($a) - 2) . ']';
-                } else {
-                    $this->error_list['values'] = substr($out, 0, strlen($out) - 1);
+                    $ok = false;
                 }
-                return false;
             }
-            return true;
+            if ($ok === null) {
+                $ok = true;
+            }
         }
-        return null;
+        return $ok;
     }
 
     protected function min(array $data, $debug = false)
