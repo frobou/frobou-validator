@@ -157,6 +157,57 @@ abstract class FrobouValidatorAbstract
         return true;
     }
 
+    public function isObject(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateEmptyObject');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            $asdf = is_object($value);
+            if (!is_object($value)) {
+                array_push($a, $key);
+            }
+        }
+        if (count($a) > 0) {
+            $out = 'isObject value error: ';
+            if ($debug === true) {
+                $out .= 'field(s) ';
+                foreach ($a as $value) {
+                    $out .= "{$value}, ";
+                }
+                $this->error_list['isObject'] = substr($out, 0, strlen($out) - 2) . ' must be an Object';
+            } else {
+                $this->error_list['isObject'] = substr($out, 0, strlen($out) - 1);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public function emptyObject(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateEmptyObject');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (!empty((array)$value)) {
+                array_push($a, $key);
+            }
+        }
+        if (count($a) > 0) {
+            $out = 'EmptyObject value error: ';
+            if ($debug === true) {
+                $out .= 'field(s) ';
+                foreach ($a as $value) {
+                    $out .= "{$value}, ";
+                }
+                $this->error_list['emptyObject'] = substr($out, 0, strlen($out) - 2) . ' must be an empty Object';
+            } else {
+                $this->error_list['emptyObject'] = substr($out, 0, strlen($out) - 1);
+            }
+            return false;
+        }
+        return true;
+    }
+
     public function email(array $data, $debug = false)
     {
         $this->validateHeader($data, 'validateEmail');
@@ -195,7 +246,7 @@ abstract class FrobouValidatorAbstract
             for ($i = 0; $i <= count($data[1]) - 1; $i++) {
                 $field = $data[1][$i];
                 $array = $data[2][$i];
-                if (!in_array(strtoupper($data[0]->{$field}), $array)) {
+                if (isset($data[0]->{$field}) && !in_array(strtoupper($data[0]->{$field}), $array)) {
                     $out = 'Expected value error: ';
                     if ($debug === true) {
                         $a = '';
@@ -380,7 +431,34 @@ abstract class FrobouValidatorAbstract
 
     public function date_en(array $data, $debug = false)
     {
+        //TODO: refazer essa josta
         $this->validateHeader($data, 'validateDateEn');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1]) && strtotime($value) === false) {
+                array_push($a, [$key => $value]);
+            }
+            if (count($a) > 0) {
+                $out = 'Incorrect Date: ';
+                if ($debug === true) {
+                    $out .= 'Field(s) [';
+                    foreach ($a as $v) {
+                        $out .= key($v) . ', ';
+                    }
+                    $this->error_list['date_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
+                } else {
+                    $this->error_list['date_en'] = substr($out, 0, strlen($out) - 1);
+                }
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public function date_br(array $data, $debug = false)
+    {
+        //TODO: nao ta certo, aceitou 31-02-2017
+        $this->validateHeader($data, 'validateDate');
         $a = [];
         foreach ($data[0] as $key => $value) {
             if (in_array($key, $data[1]) && strtotime($value) === false) {
@@ -409,15 +487,15 @@ abstract class FrobouValidatorAbstract
         $a = [];
         foreach ($data[0] as $key => $value) {
             if (in_array($key, $data[1])) {
-                if (is_object($value)){
-                    if (count((array)$value) !== 0){
+                if (is_object($value)) {
+                    if (count((array)$value) !== 0) {
                         array_push($a, [$key => $value]);
                     }
-                } else if (is_array($value)){
-                    if (count($value) !== 0){
+                } else if (is_array($value)) {
+                    if (count($value) !== 0) {
                         array_push($a, [$key => $value]);
                     }
-                } else if (strlen($value) !== 0){
+                } else if (strlen($value) !== 0) {
                     array_push($a, [$key => $value]);
                 }
             }
