@@ -82,6 +82,32 @@ abstract class FrobouValidatorAbstract
         return true;
     }
 
+
+    public function hour(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateHour');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1]) && FrobouValidation::validateHour($value) === false) {
+                array_push($a, [$key => $value]);
+            }
+            if (count($a) > 0) {
+                $out = 'Incorrect Hour: ';
+                if ($debug === true) {
+                    $out .= 'Field(s) [';
+                    foreach ($a as $v) {
+                        $out .= key($v) . ', ';
+                    }
+                    $this->error_list['hour'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid hour';
+                } else {
+                    $this->error_list['hour'] = substr($out, 0, strlen($out) - 1);
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function required(array $data, $debug = false)
     {
         $this->validateHeader($data, 'validateRequired');
@@ -163,7 +189,7 @@ abstract class FrobouValidatorAbstract
         $a = [];
         foreach ($data[0] as $key => $value) {
             $asdf = is_object($value);
-            if (!is_object($value)) {
+            if (in_array($key, $data[1]) && !is_object($value)) {
                 array_push($a, $key);
             }
         }
@@ -402,6 +428,58 @@ abstract class FrobouValidatorAbstract
         return true;
     }
 
+    public function network(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateNetwork');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1])) {
+                if (FrobouValidation::validateIpAddress($value, 3, true) !== true) {
+                    array_push($a, [$key => $value]);
+                }
+            }
+        }
+        if (count($a) > 0) {
+            $out = 'Incorrect Network: ';
+            if ($debug === true) {
+                $out .= 'Field(s) [';
+                foreach ($a as $v) {
+                    $out .= key($v) . ', ';
+                }
+                $this->error_list['network'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid Network';
+            } else {
+                $this->error_list['network'] = substr($out, 0, strlen($out) - 1);
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public function isArrayData(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateIsArrayData');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1]) && (!is_array($value) || count($value) < 1)) {
+                array_push($a, $key);
+            }
+        }
+        if (count($a) > 0) {
+            $out = 'isArrayData value error: ';
+            if ($debug === true) {
+                $out .= 'field(s) ';
+                foreach ($a as $value) {
+                    $out .= "{$value}, ";
+                }
+                $this->error_list['isArrayData'] = substr($out, 0, strlen($out) - 2) . ' must be an Array with data';
+            } else {
+                $this->error_list['isArrayData'] = substr($out, 0, strlen($out) - 1);
+            }
+            return false;
+        }
+        return true;
+    }
+
     public function domain(array $data, $debug = false)
     {
         $this->validateHeader($data, 'validateDomain');
@@ -451,8 +529,8 @@ abstract class FrobouValidatorAbstract
                 }
                 return false;
             }
-            return true;
         }
+        return true;
     }
 
     public function date_br(array $data, $debug = false)
@@ -477,8 +555,8 @@ abstract class FrobouValidatorAbstract
                 }
                 return false;
             }
-            return true;
         }
+        return true;
     }
 
     public function void($data, $debug = false)

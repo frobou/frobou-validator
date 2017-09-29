@@ -156,4 +156,17 @@ abstract class FrobouValidation
         }
         return true;
     }
+
+    /**
+     * @param $hour
+     * @return bool
+     */
+    public static function validateHour($hour)
+    {
+        if (preg_match('/^(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1,2}$/', $hour)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
