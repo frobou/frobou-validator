@@ -538,7 +538,8 @@ abstract class FrobouValidatorAbstract
         $this->validateHeader($data, 'validateDateEn');
         $a = [];
         foreach ($data[0] as $key => $value) {
-            if (in_array($key, $data[1]) && strtotime($value) === false) {
+            $dateUS = \DateTime::createFromFormat("Y-m-d", $value);
+            if (in_array($key, $data[1]) && $dateUS === false) {
                 array_push($a, [$key => $value]);
             }
             if (count($a) > 0) {
@@ -564,7 +565,8 @@ abstract class FrobouValidatorAbstract
         $this->validateHeader($data, 'validateDate');
         $a = [];
         foreach ($data[0] as $key => $value) {
-            if (in_array($key, $data[1]) && strtotime($value) === false) {
+            $dateUS = \DateTime::createFromFormat("d/m/Y", $value);
+            if (in_array($key, $data[1]) && $dateUS === false) {
                 array_push($a, [$key => $value]);
             }
             if (count($a) > 0) {
@@ -574,9 +576,9 @@ abstract class FrobouValidatorAbstract
                     foreach ($a as $v) {
                         $out .= key($v) . ', ';
                     }
-                    $this->error_list['date_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
+                    $this->error_list['date_br'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
                 } else {
-                    $this->error_list['date_en'] = substr($out, 0, strlen($out) - 1);
+                    $this->error_list['date_br'] = substr($out, 0, strlen($out) - 1);
                 }
                 return false;
             }
