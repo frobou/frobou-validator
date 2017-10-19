@@ -169,4 +169,12 @@ abstract class FrobouValidation
             return false;
         }
     }
+
+    public static function validateBoolean($value)
+    {
+        if (is_bool($value) === false) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -158,6 +158,31 @@ abstract class FrobouValidatorAbstract
         return true;
     }
 
+    public function boolean(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateBoolean');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1]) && FrobouValidation::validateBoolean($value) === false) {
+                array_push($a, $key);
+            }
+        }
+        if (count($a) > 0) {
+            $out = 'Boolean value error: ';
+            if ($debug === true) {
+                $out .= 'field(s) ';
+                foreach ($a as $value) {
+                    $out .= "{$value}, ";
+                }
+                $this->error_list['string'] = substr($out, 0, strlen($out) - 2) . ' must be boolean';
+            } else {
+                $this->error_list['string'] = substr($out, 0, strlen($out) - 1);
+            }
+            return false;
+        }
+        return true;
+    }
+
     public function integer(array $data, $debug = false)
     {
         $this->validateHeader($data, 'validateInteger');
