@@ -534,13 +534,14 @@ abstract class FrobouValidatorAbstract
 
     public function date_en(array $data, $debug = false)
     {
-        //TODO: refazer essa josta
         $this->validateHeader($data, 'validateDateEn');
         $a = [];
         foreach ($data[0] as $key => $value) {
-            $dateUS = \DateTime::createFromFormat("Y-m-d", $value);
-            if (in_array($key, $data[1]) && $dateUS === false) {
-                array_push($a, [$key => $value]);
+            if (in_array($key, $data[1])) {
+                $dateUS = \DateTime::createFromFormat("Y-m-d", $value);
+                if ($dateUS === false) {
+                    array_push($a, [$key => $value]);
+                }
             }
             if (count($a) > 0) {
                 $out = 'Incorrect Date: ';
@@ -559,15 +560,53 @@ abstract class FrobouValidatorAbstract
         return true;
     }
 
+    public function date_time_en(array $data, $debug = false)
+    {
+        $this->validateHeader($data, 'validateDateTimeEn');
+        $a = [];
+        foreach ($data[0] as $key => $value) {
+            if (in_array($key, $data[1])) {
+                $dateUS = \DateTime::createFromFormat("Y-m-d h:i:s", $value);
+                if ($dateUS === false) {
+                    array_push($a, [$key => $value]);
+                }
+            }
+            if (count($a) > 0) {
+                $out = 'Incorrect Date: ';
+                if ($debug === true) {
+                    $out .= 'Field(s) [';
+                    foreach ($a as $v) {
+                        $out .= key($v) . ', ';
+                    }
+                    $this->error_list['date_time_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
+                } else {
+                    $this->error_list['date_time_en'] = substr($out, 0, strlen($out) - 1);
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function date_br(array $data, $debug = false)
     {
-        //TODO: nao ta certo, aceitou 31-02-2017
         $this->validateHeader($data, 'validateDate');
         $a = [];
         foreach ($data[0] as $key => $value) {
-            $dateUS = \DateTime::createFromFormat("d/m/Y", $value);
-            if (in_array($key, $data[1]) && $dateUS === false) {
-                array_push($a, [$key => $value]);
+            if (in_array($key, $data[1])) {
+                try {
+                    list($dia, $mes, $ano) = explode('/', $value);
+                    if (checkdate($mes, $dia, $ano)) {
+                        $dateUS = \DateTime::createFromFormat("d/m/Y", $value);
+                        if ($dateUS === false) {
+                            array_push($a, [$key => $value]);
+                        }
+                    } else {
+                        array_push($a, [$key => $value]);
+                    }
+                } catch (\Exception $e) {
+                    array_push($a, [$key => $value]);
+                }
             }
             if (count($a) > 0) {
                 $out = 'Incorrect Date: ';
