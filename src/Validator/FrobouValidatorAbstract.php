@@ -578,7 +578,7 @@ abstract class FrobouValidatorAbstract
                     foreach ($a as $v) {
                         $out .= key($v) . ', ';
                     }
-                    $this->error_list['date_time_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid date';
+                    $this->error_list['date_time_en'] = substr($out, 0, strlen($out) - 2) . '] not contains a valid datetime';
                 } else {
                     $this->error_list['date_time_en'] = substr($out, 0, strlen($out) - 1);
                 }
